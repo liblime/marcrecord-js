@@ -41,6 +41,20 @@ function MarcRecord(marc) {
         var subfields = this.subfields(tagspec.substr(0, 4));
         return (subfields.length == 0) ? undefined : subfields[0][1];
     };
+
+    this.ctrl = function(ctrlspec) {
+        var tag = ctrlspec.substr(0, 3);
+        var pos = ctrlspec.substr(4).replace(/\[|\]/g, '').split(/-/);
+        if (pos[0] === '') {
+            return this.field(tag);
+        }
+        else if (pos.length === 1) {
+            return this.field(tag).substr(pos[0], 1);
+        }
+        else if (pos.length === 2) {
+            return this.field(tag).substr(pos[0], pos[1] - pos[0] + 1);
+        }
+    };
 }
 
 var r = new MarcRecord(
@@ -76,3 +90,6 @@ print('ONE SUBFIELD:'+r.subfield('040a'))
 print('REGEX SUBFIELD:'+r.subfield('01.b'))
 print('HAS true:'+r.has('040'));
 print('HAS false:'+r.has('041'));
+print('CTRL ALL:'+r.ctrl('006'))
+print('CTRL ONE:'+r.ctrl('006[2]'))
+print('CTRL RANGE:'+r.ctrl('006[4-6]'))
