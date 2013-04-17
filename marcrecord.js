@@ -17,6 +17,10 @@ function MarcRecord(marc) {
         return (fields.length == 0) ? undefined : fields[0][1];
     };
 
+    this.has = function (tag) {
+        return this.fields(tag).length > 0;
+    };
+
     this.subfields = function(tagspec) {
         var tag = tagspec.substr(0, 3);
         var needles = tagspec.substr(3).split('');
@@ -70,3 +74,5 @@ print('REGEX FIELDS:'+r.fields('..6'))
 print('ALL SUBFIELDS:'+r.subfields('040abcdez'))
 print('ONE SUBFIELD:'+r.subfield('040a'))
 print('REGEX SUBFIELD:'+r.subfield('01.b'))
+print('HAS true:'+r.has('040'));
+print('HAS false:'+r.has('041'));
