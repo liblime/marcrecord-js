@@ -1,15 +1,11 @@
-function marcRecord(marc) {
-    this.tags = [], this.values = [];
-    for (var i = 0; i < marc.length - 1; i += 2) {
-        this.tags.push(marc[i]);
-        this.values.push(marc[i+1]);
-    }
+function MarcRecord(marc) {
+    this.marc = marc;
 
     this.fields = function(tag) {
         var out = [];
-        for (var i = 0; i < this.tags.length; i++) {
-            if ( this.tags[i] === tag ) {
-                out.push([this.tags[i], this.values[i]]);
+        for (var i = 0; i < this.marc.length-1; i+=2) {
+            if ( this.marc[i] === tag ) {
+                out.push([this.marc[i], this.marc[i+1]]);
             }
         }
         return out;
@@ -43,7 +39,7 @@ function marcRecord(marc) {
     }
 }
 
-var r = new marcRecord(
+var r = new MarcRecord(
     [
         '001', 'asdfgdfgdf',
         '006', '98234k2j3h4kj',
@@ -58,10 +54,9 @@ var r = new marcRecord(
     ]
 );
 
-print('is marcRecord:'+(r instanceof marcRecord));
-
+print('is MarcRecord:'+(r instanceof MarcRecord));
 print('ALL FIELDS:'+r.fields('006'))
 print('ONE FIELD:'+r.field('006'))
-print('FIELD DNE:'+r.field('007'))
+print('NO FIELD:'+r.field('007'))
 print('ALL SUBFIELDS:'+r.subfields('040abcdez'))
 print('ONE SUBFIELD:'+r.subfield('040a'))
