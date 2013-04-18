@@ -28,6 +28,9 @@ function MarcRecord(marc) {
     this.subfields = function(tagspec) {
         var tag = tagspec.substr(0, 3);
         var needles = tagspec.substr(3).split('');
+        if(!this.field(tag)){
+            return [];
+        }
         var haystack = this.field(tag).subfields;
         var out = [];
         for (var i = 0; i < haystack.length-1; i+=2) {
