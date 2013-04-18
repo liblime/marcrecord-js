@@ -1,12 +1,16 @@
 function MarcRecord(marc) {
     this.marc = marc;
 
+    this.leader = function() {
+        return this.marc.leader;
+    }
+
     this.fields = function(tag) {
         var out = [];
         var tag_re = new RegExp(tag);
-        for (var i = 0; i < this.marc.length-1; i+=2) {
-            if ( tag_re.test(this.marc[i]) ) {
-                out.push([this.marc[i], this.marc[i+1]]);
+        for (var i = 0; i < this.marc.fields.length-1; i+=2) {
+            if ( tag_re.test(this.marc.fields[i]) ) {
+                out.push([this.marc.fields[i], this.marc.fields[i+1]]);
             }
         }
         return out;
@@ -58,29 +62,33 @@ function MarcRecord(marc) {
 }
 
 var r = new MarcRecord(
-    [
-        '001', 'asdfgdfgdf',
-        '006', '98234k2j3h4kj',
-        '006', 'kwjrkwerwerwe',
-        '040', {
-            ind1: ' ', ind2: ' ',
-            subfields: [
-                'a', '21234',
-                'z', 'sldkflsd'
-            ]
-        },
-        '016', {
-            ind1: '1', ind2: ' ',
-            subfields: [
-                'b', 'zzyzzy',
-                'b', 'zzxyyx',
-                't', 'xyzzy'
-            ]
-        }
-    ]
+    {
+        leader: 'skdjfhskdfsdf',
+        fields: [
+            '001', 'asdfgdfgdf',
+            '006', '98234k2j3h4kj',
+            '006', 'kwjrkwerwerwe',
+            '040', {
+                ind1: ' ', ind2: ' ',
+                subfields: [
+                    'a', '21234',
+                    'z', 'sldkflsd'
+                ]
+            },
+            '016', {
+                ind1: '1', ind2: ' ',
+                subfields: [
+                    'b', 'zzyzzy',
+                    'b', 'zzxyyx',
+                    't', 'xyzzy'
+                ]
+            }
+        ]
+    }
 );
 
 print('IS MarcRecord:'+(r instanceof MarcRecord));
+print('LEADER:'+r.leader());
 print('ALL FIELDS:'+r.fields('006'))
 print('ONE FIELD:'+r.field('006'))
 print('NO FIELD:'+r.field('007'))
