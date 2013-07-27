@@ -28,18 +28,22 @@ function MarcRecord(marc) {
     this.subfields = function(tagspec) {
         var tag = tagspec.substr(0, 3);
         var needles = tagspec.substr(3).split('');
-        if(!this.field(tag)){
-            return [];
-        }
-        var haystack = this.field(tag).subfields;
+        var fields = this.fields(tag);
+        if(!fields.length) return [];
+        // [ '500', [ 'a', val, 'b', val], ]
         var out = [];
-        for (var i = 0; i < haystack.length-1; i+=2) {
-            for (var j = 0; j < needles.length; j++) {
-                if (haystack[i] === needles[j]) {
-                    out.push([ tag + haystack[i], haystack[i+1]]);
-                    break;
+        for(var f=0; f<fields.length;f++){
+            var haystack = fields[f][1].subfields;
+            var subfields = [];
+            for (var i = 0; i < haystack.length-1; i+=2) {
+                for (var j = 0; j < needles.length; j++) {
+                    if (haystack[i] === needles[j]) {
+                        subfields.push([haystack[i], haystack[i+1]]);
+                        break;
+                    }
                 }
             }
+            out.push(tag, subfields);
         }
         return out;
     };
