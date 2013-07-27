@@ -50,7 +50,8 @@ function MarcRecord(marc) {
 
     this.subfield = function(tagspec) {
         var subfields = this.subfields(tagspec.substr(0, 4));
-        return (subfields.length == 0) ? undefined : subfields[0][1];
+        if(!subfields.length || !subfields[1].length || !subfields[1][0].length) return undefined;
+        return subfields[1][0][1];
     };
 
     this.ctrl = function(ctrlspec) {
