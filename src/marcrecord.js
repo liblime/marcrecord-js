@@ -2,15 +2,8 @@ function MarcRecord(marc) {
     this.marc = marc;
 
     function MarcField(field, field_data){
-        this.tag = field;
-        if(typeof field_data === 'object'){
-            this.ind1 = field_data.ind1;
-            this.ind2 = field_data.ind2;
-            this.subfield_data = field_data.subfields;
-        } else if(typeof field_data === 'string'){
-            // assume control fields
-            this.data = field_data;
-        }
+
+        // See init block for initialization
 
         this.subfields = function(filterspec){
             // filterspec is simply a list of subfields.  e.g. 'abhjm'.
@@ -55,7 +48,10 @@ function MarcRecord(marc) {
             if(!options) options = { delimiter: null };
             var i1 = (!this.ind1 || this.ind1 === ' ' || this.ind1 === '#') ? '' : this.ind1;
             var i2 = (!this.ind2 || this.ind2 === ' ' || this.ind2 === '#') ? '' : this.ind2;
-            var output = '<span class="marcfield marc' +this.tag + ' ' +
+
+            var data_rcn = (this.rcn) ? 'data-rcn="' + this.rcn + '" ' : '';
+            // arguably we should put indicators in data- attrs as well, but we stash them in classes for styling.
+            var output = '<span '+ data_rcn + 'class="marcfield marc' +this.tag + ' ' +
                          'marc' + this.tag.substring(0,1) +'XX marc-i1'+i1+ ' marc-i2'+ i2 +'">';
 
             if(this.subfield_data.length){
@@ -68,7 +64,8 @@ function MarcRecord(marc) {
                     if(options.filterLast && typeof options.filterLast === 'function' && i == this.subfield_data.length-2){
                         value = options.filterLast(value);
                     }
-                    output += "<span class=\"subfield marc" + this.tag + subf + "\">" + value + "</span>";
+                    var classnames = "subfield marc" + this.tag + subf;
+                    output += '<span class="' + classnames + '">' + value + "</span>";
                     if( options.delimiter && i < this.subfield_data.length - 2) output += options.delimiter;
                 }
             } else {
@@ -88,13 +85,26 @@ function MarcRecord(marc) {
             // returns array of associated 880 MarcField objects.
 
         };
-        this.rcn = function(){
-            // convenience method, equivalent to this.subfield('0');
-            return this.subfield('0');
-        };
+
         this.is_control_field = function(){
             return this.data && this.tag < '010';
         };
+
+        // Object initialization
+
+        this.tag = field;
+        if(typeof field_data === 'object'){
+            this.ind1 = field_data.ind1;
+            this.ind2 = field_data.ind2;
+            this.subfield_data = field_data.subfields;
+            // store control subfields in case they're filtered later.
+            // todo: $6, $8.
+            this.rcn = this.subfield('0');
+
+        } else if(typeof field_data === 'string'){
+            // assume control fields
+            this.data = field_data;
+        }
 
     }
 
