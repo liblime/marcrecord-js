@@ -98,7 +98,7 @@ describe('Fetch control fields', function() {
 describe('Fetch subfields', function() {
     it('Fetch all subfields from a field', function() {
         expect(r.field('040').subfields('acbdez')).toEqual(
-            [ 'a', '21234', 'z', 'sldkflsd' ]);
+            [ ['a', '21234'], ['z', 'sldkflsd'] ]);
     });
     it('Fetch one subfield', function() {
         expect(r.subfield('040a')).toBe('21234');
@@ -119,18 +119,29 @@ describe('Fetch indicators', function(){
 
 describe('Filter subfields', function(){
     it('Fetch some subfields', function(){
-        expect(r.field('016').filter('X9').subfields()).toEqual(
-            [ 'X', 'syzygy', '9', 'ZxzXz' ]);
+        expect(r.field('016').subfields('X9')).toEqual(
+            [ ['X', 'syzygy'], ['9', 'ZxzXz'] ]);
     });
 });
 
 describe('MARC-HTML output', function(){
     it('Fetch field as marc-html', function(){
-        expect(r.field('016').filter('t').html()).toEqual(
+        expect(r.field('016').html({filter: 't'})).toEqual(
             '<span class="marcfield marc016 marc0XX marc-i11 marc-i2"><span class="subfield marc016t">xyzzy</span></span>'
             );
     });
+    it('Fetch field as marc-html, with repeated subfield.', function(){
+        expect(r.field('016').html({filter: '9b'})).toEqual(
+            '<span class="marcfield marc016 marc0XX marc-i11 marc-i2"><span class="subfield marc016b">zzyzzy</span><span class="subfield marc016b">zzxyyx</span><span class="subfield marc0169">ZxzXz</span></span>'
+            );
+    });
+    it('Fetch field as marc-html, reordered.', function(){
+        expect(r.field('016').html({filter: 't9Xb', reorder: true})).toEqual(
+            '<span class="marcfield marc016 marc0XX marc-i11 marc-i2"><span class="subfield marc016t">xyzzy</span><span class="subfield marc0169">ZxzXz</span><span class="subfield marc016X">syzygy</span><span class="subfield marc016b">zzyzzy</span><span class="subfield marc016b">zzxyyx</span></span>'
+            );
+    });
 });
+
 
 describe('Title', function(){
     it('can be retrieved', function(){
