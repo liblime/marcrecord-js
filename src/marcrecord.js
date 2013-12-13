@@ -9,7 +9,7 @@ function MarcRecord(marc) {
             //returns a copy of subfields object.
             var clone = [];
             for(var i=0; i<this.subfield_data.length; i++){
-                clone.push( [ this.subfield_data[0] , this.subfield_data[1] ] );
+                clone.push( { code: this.subfield_data[i].code , value: this.subfield_data[i].value } );
             }
             return clone;
         };
@@ -20,13 +20,13 @@ function MarcRecord(marc) {
             // Note filterspec order does not influence return value unless options.reorder is true.
             // subfields that match are returned in the order they appear in the record.
 
-            if(!filterspec) return this.subfields_clone();  // FIXME: should return copy.
+            if(this.is_control_field()) return null;
+            if(!filterspec) return this._subfields_clone();  // FIXME: should return copy.
             if(!options) options = {};
             var needles = filterspec;
             var haystack = (options.reorder) ?
                     this.subfield_data.sort(function(a,b){
-                            if (filterspec.indexOf(a[0])==-1 || filterspec.indexOf(b[0]) < filterspec.indexOf(a[0])) return 1;
-                         //   else if(1) return 1;
+                            if (filterspec.indexOf(a.code)==-1 || filterspec.indexOf(b.code) < filterspec.indexOf(a.code)) return 1;
                             return -1;
                         })
                     : this.subfield_data;
@@ -34,8 +34,8 @@ function MarcRecord(marc) {
 
             for(var i=0; i< haystack.length; i++){
                 for (var j = 0; j < needles.length; j++) {
-                    if (haystack[i][0] === needles[j]) {
-                        newsubfields.push([haystack[i][0], haystack[i][1]]);
+                    if (haystack[i].code === needles[j]) {
+                        newsubfields.push({ code: haystack[i].code, value: haystack[i].value });
                         break;
                     }
                 }
@@ -71,8 +71,8 @@ function MarcRecord(marc) {
                 var target_subfields = this.subfields(options.filter, { reorder: options.reorder });
                 if(target_subfields.length){
                     for( var i = 0; i < target_subfields.length; i++){
-                        var subf = target_subfields[i][0];
-                        var value = target_subfields[i][1];
+                        var subf = target_subfields[i].code;
+                        var value = target_subfields[i].value;
                         if(options.filterEach && typeof options.filterEach === 'function'){
                             value = options.filterEach(value);
                           }
@@ -95,7 +95,7 @@ function MarcRecord(marc) {
             // ouput subfield value as text.
             // if subfield is repeated, only outputs the first value.
             var matched = this.subfields(subfield);
-            return (matched.length) ? matched[0][1] : null;
+            return (matched.length) ? matched[0].value : null;
         };
         this.m880 = function(){
             // returns array of associated 880 MarcField objects.
@@ -103,7 +103,7 @@ function MarcRecord(marc) {
         };
 
         this.is_control_field = function(){
-            return this.data && this.tag < '010';
+            return (this.data && this.tag < '010') ? true : false;
         };
 
         // Object initialization
@@ -112,12 +112,12 @@ function MarcRecord(marc) {
         // to simplify sorting.  The external format is an interleaved array of code, value pairs.
 
         this.tag = field;
+        this.subfield_data = [];
         if(typeof field_data === 'object'){
             this.ind1 = field_data.ind1;
             this.ind2 = field_data.ind2;
-            this.subfield_data = [];
             for (var i = 0; i < field_data.subfields.length-1; i+=2 ){
-                this.subfield_data.push( [ field_data.subfields[i], field_data.subfields[i+1] ]);
+                this.subfield_data.push( { code: field_data.subfields[i], value: field_data.subfields[i+1] });
             }
             // store control subfields in case they're filtered later.
             // todo: $6, $8.

@@ -97,8 +97,12 @@ describe('Fetch control fields', function() {
 
 describe('Fetch subfields', function() {
     it('Fetch all subfields from a field', function() {
-        expect(r.field('040').subfields('acbdez')).toEqual(
-            [ ['a', '21234'], ['z', 'sldkflsd'] ]);
+        expect(r.field('040').subfields()).toEqual(
+            [ { code: 'a', value: '21234'}, { code: 'z', value: 'sldkflsd'} ]);
+    });
+    it('Fetch some subfields from a field', function() {
+        expect(r.field('040').subfields('acbd')).toEqual(
+            [ { code: 'a', value: '21234'} ]);
     });
     it('Fetch one subfield', function() {
         expect(r.subfield('040a')).toBe('21234');
@@ -120,7 +124,7 @@ describe('Fetch indicators', function(){
 describe('Filter subfields', function(){
     it('Fetch some subfields', function(){
         expect(r.field('016').subfields('X9')).toEqual(
-            [ ['X', 'syzygy'], ['9', 'ZxzXz'] ]);
+            [ { code: 'X', value: 'syzygy' }, { code: '9', value: 'ZxzXz'} ]);
     });
 });
 
