@@ -1,5 +1,4 @@
-var r = new MarcRecord(
-    {
+var marcjson = {
         leader: 'skdjfhskdfsdf',
         fields: [
             '001', 'asdfgdfgdf',
@@ -45,8 +44,8 @@ var r = new MarcRecord(
                 'a', 'pokpok' ]
             }
         ]
-    }
-);
+    };
+var r = new MarcRecord(marcjson);
 
 describe('Object tests', function() {
     it('is a MarcRecord object', function() {
@@ -57,6 +56,12 @@ describe('Object tests', function() {
 describe('Fetch leader', function() {
     it('can retrieve leader', function() {
         expect(r.leader()).toBe('skdjfhskdfsdf');
+    });
+});
+
+describe('Round trip', function() {
+    it('does not munge marcjson', function() {
+        expect(r.toJSON()).toEqual(marcjson);
     });
 });
 
@@ -146,6 +151,24 @@ describe('MARC-HTML output', function(){
     });
 });
 
+describe('Mutation', function(){
+    var added_field, deleted_field;
+    beforeEach(function(){
+        added_field = r.add_field(7,'111');
+    });
+    afterEach(function(){
+        deleted_field = r.delete_field(7);
+    });
+
+    it('can add a field', function(){
+        expect(r.fields('1..').length).toEqual( 2 );
+        expect(r.fields('1..')[0].tag).toEqual('111');
+    });
+    it('can delete a field', function(){
+        expect(added_field.tag).toEqual(deleted_field.tag);
+        //expect(r.toJSON()).toEqual(marcjson);
+    });
+});
 
 describe('Title', function(){
     it('can be retrieved', function(){

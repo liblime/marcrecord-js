@@ -1,5 +1,6 @@
 function MarcRecord(marc) {
-    this.marc = marc;
+    this._marc = marc;
+    this._fields = [];
 
     function MarcField(field, field_data){
 
@@ -21,7 +22,12 @@ function MarcRecord(marc) {
             // subfields that match are returned in the order they appear in the record.
 
             if(this.is_control_field()) return null;
-            if(!filterspec) return this._subfields_clone();  // FIXME: should return copy.
+//            if(!filterspec) return this._subfields_clone();
+            if(!filterspec) return this.subfield_data;
+            // Without filtering, we return the actual subfield data (which could be altered by caller)
+            // but we return a copy if it's filtered.  Not ideal.
+            // maybe we should offer option of returning a clone.
+
             if(!options) options = {};
             var needles = filterspec;
             var haystack = (options.reorder) ?
@@ -101,6 +107,19 @@ function MarcRecord(marc) {
             // returns array of associated 880 MarcField objects.
 
         };
+        this.add_subfield = function(index, data) {
+            // Creates a new subfield object, inserts it into record BEFORE specified index
+            // and returns it.  Will add to end if index isn't passed.
+            // data can be a subfield object or just the subfield code.
+            var newSubfield = (typeof data == 'object') ? {code: data.code, value: data.value} : {code: data, value: ''};
+            if(!index || index >= this.subfield_data.length) index = this.subfield_data.length-1;
+            this.subfield_data.splice(index, 0, newSubfield);
+            return newSubfield;
+        };
+
+        this.delete_subfield = function(index){
+            return this.subfield_data.splice(index,1)[0];
+        };
 
         this.is_control_field = function(){
             return (this.data && this.tag < '010') ? true : false;
@@ -130,17 +149,24 @@ function MarcRecord(marc) {
 
     }
 
+    // MarcRecord object initialization
+
+    this._fields = [ new MarcField('000', marc.leader) ];
+    for (var i = 0; i < marc.fields.length-1; i+=2) {
+        this._fields.push(new MarcField(marc.fields[i], marc.fields[i+1]));
+    }
 
     this.leader = function() {
-        return this.marc.leader;
+        // FIXME relies on ordering.
+        return this._fields[0].data;
     };
 
     this.fields = function(tag) {
         var out = [];
         var tag_re = new RegExp(tag);
-        for (var i = 0; i < this.marc.fields.length-1; i+=2) {
-            if ( tag_re.test(this.marc.fields[i]) ) {
-                out.push(new MarcField(this.marc.fields[i], this.marc.fields[i+1]));
+        for (var i = 0; i < this._fields.length; i++) {
+            if(tag_re.test(this._fields[i].tag)){
+                out.push(this._fields[i]);
             }
         }
         return out;
@@ -149,6 +175,19 @@ function MarcRecord(marc) {
     this.field = function(tag) {
         var matched_fields = this.fields(tag);
         return (matched_fields.length === 0) ? null : matched_fields[0];
+    };
+
+    this.add_field = function(index, tag) {
+        // Creates a new MarcField object, inserts it into record BEFORE specified index
+        // and returns it.  Will add to end if index isn't passed.  (Also, you can't pass 0).
+        var newField = new MarcField(tag);
+        if(!index || index >= this._fields.length) index = this._fields.length-1;
+        this._fields.splice(index, 0, newField);
+        return newField;
+    };
+
+    this.delete_field = function(index){
+        return this._fields.splice(index,1)[0];
     };
 
     this.has = function (tag) {
@@ -167,6 +206,28 @@ function MarcRecord(marc) {
     this.title = function(){
         var field = this.field('245');
         return field.subfield('a') + ' ' + field.subfield('b');
+    };
+
+    this.toJSON = function(){
+        var out = { leader: this.leader(), fields: []};
+        for (var i = 0; i < this._fields.length; i++) {
+            if(this._fields[i].tag == '000') continue;
+            out.fields.push( this._fields[i].tag );
+            if(this._fields[i].is_control_field()){
+                out.fields.push( this._fields[i].data );
+            } else {
+                var sf = { ind1: this._fields[i].ind1,
+                    ind2: this._fields[i].ind2,
+                    subfields: []
+                    };
+                for (var j = 0; j < this._fields[i].subfield_data.length; j++) {
+                    sf.subfields.push(this._fields[i].subfield_data[j].code);
+                    sf.subfields.push(this._fields[i].subfield_data[j].value);
+                }
+                out.fields.push( sf );
+            }
+        }
+        return out;
     };
 
     this.coins = function(){
