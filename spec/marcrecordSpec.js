@@ -1,5 +1,4 @@
-var r = new MarcRecord(
-    {
+var marcjson = {
         leader: 'skdjfhskdfsdf',
         fields: [
             '001', 'asdfgdfgdf',
@@ -45,8 +44,8 @@ var r = new MarcRecord(
                 'a', 'pokpok' ]
             }
         ]
-    }
-);
+    };
+var r = new MarcRecord(marcjson);
 
 describe('Object tests', function() {
     it('is a MarcRecord object', function() {
@@ -57,6 +56,12 @@ describe('Object tests', function() {
 describe('Fetch leader', function() {
     it('can retrieve leader', function() {
         expect(r.leader()).toBe('skdjfhskdfsdf');
+    });
+});
+
+describe('Round trip', function() {
+    it('does not munge marcjson', function() {
+        expect(r.toJSON()).toEqual(marcjson);
     });
 });
 
@@ -97,8 +102,12 @@ describe('Fetch control fields', function() {
 
 describe('Fetch subfields', function() {
     it('Fetch all subfields from a field', function() {
-        expect(r.field('040').subfields('acbdez')).toEqual(
-            [ 'a', '21234', 'z', 'sldkflsd' ]);
+        expect(r.field('040').subfields()).toEqual(
+            [ { code: 'a', value: '21234'}, { code: 'z', value: 'sldkflsd'} ]);
+    });
+    it('Fetch some subfields from a field', function() {
+        expect(r.field('040').subfields('acbd')).toEqual(
+            [ { code: 'a', value: '21234'} ]);
     });
     it('Fetch one subfield', function() {
         expect(r.subfield('040a')).toBe('21234');
@@ -119,16 +128,45 @@ describe('Fetch indicators', function(){
 
 describe('Filter subfields', function(){
     it('Fetch some subfields', function(){
-        expect(r.field('016').filter('X9').subfields()).toEqual(
-            [ 'X', 'syzygy', '9', 'ZxzXz' ]);
+        expect(r.field('016').subfields('X9')).toEqual(
+            [ { code: 'X', value: 'syzygy' }, { code: '9', value: 'ZxzXz'} ]);
     });
 });
 
 describe('MARC-HTML output', function(){
     it('Fetch field as marc-html', function(){
-        expect(r.field('016').filter('t').html()).toEqual(
+        expect(r.field('016').html({filter: 't'})).toEqual(
             '<span class="marcfield marc016 marc0XX marc-i11 marc-i2"><span class="subfield marc016t">xyzzy</span></span>'
             );
+    });
+    it('Fetch field as marc-html, with repeated subfield.', function(){
+        expect(r.field('016').html({filter: '9b'})).toEqual(
+            '<span class="marcfield marc016 marc0XX marc-i11 marc-i2"><span class="subfield marc016b">zzyzzy</span><span class="subfield marc016b">zzxyyx</span><span class="subfield marc0169">ZxzXz</span></span>'
+            );
+    });
+    it('Fetch field as marc-html, reordered.', function(){
+        expect(r.field('016').html({filter: 't9Xb', reorder: true})).toEqual(
+            '<span class="marcfield marc016 marc0XX marc-i11 marc-i2"><span class="subfield marc016t">xyzzy</span><span class="subfield marc0169">ZxzXz</span><span class="subfield marc016X">syzygy</span><span class="subfield marc016b">zzyzzy</span><span class="subfield marc016b">zzxyyx</span></span>'
+            );
+    });
+});
+
+describe('Mutation', function(){
+    var added_field, deleted_field;
+    beforeEach(function(){
+        added_field = r.add_field(7,'111');
+    });
+    afterEach(function(){
+        deleted_field = r.delete_field(7);
+    });
+
+    it('can add a field', function(){
+        expect(r.fields('1..').length).toEqual( 2 );
+        expect(r.fields('1..')[0].tag).toEqual('111');
+    });
+    it('can delete a field', function(){
+        expect(added_field.tag).toEqual(deleted_field.tag);
+        //expect(r.toJSON()).toEqual(marcjson);
     });
 });
 
