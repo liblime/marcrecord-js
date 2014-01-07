@@ -111,8 +111,9 @@ function MarcRecord(marc) {
             // Creates a new subfield object, inserts it into record BEFORE specified index
             // and returns it.  Will add to end if index isn't passed.
             // data can be a subfield object or just the subfield code.
+
             var newSubfield = (typeof data == 'object') ? {code: data.code, value: data.value} : {code: data, value: ''};
-            if(!index || index >= this.subfield_data.length) index = this.subfield_data.length-1;
+            if(index > this.subfield_data.length) index = this.subfield_data.length;
             this.subfield_data.splice(index, 0, newSubfield);
             return newSubfield;
         };
@@ -121,17 +122,26 @@ function MarcRecord(marc) {
             return this.subfield_data.splice(index,1)[0];
         };
 
+        this.replace = function(newField){
+            // not for controlfields.  replaces subfield data with newField's
+            this.subfield_data = newField._subfields_clone();
+            this.ind1 = newField.ind1;
+            this.ind2 = newField.ind2;
+
+        };
+
         this.is_control_field = function(){
-            return (this.data && this.tag < '010') ? true : false;
+            return (this.tag < '010') ? true : false;
         };
 
         // Object initialization
 
-        // we store subfields as an array of 2-element arrays [ code, value ]
+        // we store subfields as an array of objects with properties code & value
         // to simplify sorting.  The external format is an interleaved array of code, value pairs.
 
         this.tag = field;
         this.subfield_data = [];
+
         if(typeof field_data === 'object'){
             this.ind1 = field_data.ind1;
             this.ind2 = field_data.ind2;
@@ -150,8 +160,8 @@ function MarcRecord(marc) {
     }
 
     // MarcRecord object initialization
-
     this._fields = [ new MarcField('000', marc.leader) ];
+
     for (var i = 0; i < marc.fields.length-1; i+=2) {
         this._fields.push(new MarcField(marc.fields[i], marc.fields[i+1]));
     }
@@ -180,8 +190,10 @@ function MarcRecord(marc) {
     this.add_field = function(index, tag) {
         // Creates a new MarcField object, inserts it into record BEFORE specified index
         // and returns it.  Will add to end if index isn't passed.  (Also, you can't pass 0).
-        var newField = new MarcField(tag);
-        if(!index || index >= this._fields.length) index = this._fields.length-1;
+        // TODO: Need to specify if it's a control field.
+
+        var newField = new MarcField(tag, { subfields: ['', '']});
+        if(!index || index >= this._fields.length) index = this._fields.length;
         this._fields.splice(index, 0, newField);
         return newField;
     };
