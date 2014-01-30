@@ -1,5 +1,5 @@
 var marcjson = {
-        leader: 'skdjfhskdfsdf',
+        leader: '01033cam a22003378a 4500',
         fields: [
             '001', 'asdfgdfgdf',
             '006', '98234k2j3h4kj',
@@ -55,7 +55,7 @@ describe('Object tests', function() {
 
 describe('Fetch leader', function() {
     it('can retrieve leader', function() {
-        expect(r.leader()).toBe('skdjfhskdfsdf');
+        expect(r.leader()).toBe('01033cam a22003378a 4500');
     });
 });
 
@@ -151,7 +151,7 @@ describe('MARC-HTML output', function(){
     });
 });
 
-describe('Mutation', function(){
+describe('Variable Field Mutation', function(){
     var added_field, deleted_field;
     beforeEach(function(){
         added_field = r.add_field(7,'111');
@@ -170,15 +170,39 @@ describe('Mutation', function(){
     });
 });
 
+describe('Control Field Mutation', function(){
+    var old_ldr = r.leader();
+    console.log(old_ldr);
+    afterEach(function(){
+        r.field('000').replace(old_ldr);
+    });
+    it('can replace control field', function(){
+        var ldr = r.field('000');
+        ldr.replace('INVALID LEADER');
+        expect(r.leader()).toEqual( 'INVALID LEADER' );
+    });
+    it('can splice control field', function(){
+        var ldr = r.field('000');
+        ldr.replace('XX','[04-05]').replace('Y','[22]');
+        expect(r.leader()).toEqual('0103XXam a22003378a 45Y0');
+    });
+});
+
 describe('Title', function(){
     it('can be retrieved', function(){
-        expect(r.title()).toEqual( "A Title: of sorts" );
+        expect(r.title()).toEqual( "A Title:" );
     });
 });
 
 describe('COinS', function(){
     it('can be generated', function(){
-        expect(r.coins()).toEqual( "ctx_ver=Z39.88-2004&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&rft.btitle=A+Title%3A+of+sorts&rtf.au%5B%5D=The+Man&rtf.au%5B%5D=uhuhuhgh&rtf.au%5B%5D=pokpok" );
+        expect(r.coins()).toEqual( "ctx_ver=Z39.88-2004&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&rft.btitle=A+Title%3A&rtf.au%5B%5D=The+Man&rtf.au%5B%5D=uhuhuhgh&rtf.au%5B%5D=pokpok" );
+    });
+});
+
+describe('Record Type extraction', function(){
+    it('works for BOOKS', function(){
+        expect(r.rtype()).toEqual('BKS');
     });
 });
 
