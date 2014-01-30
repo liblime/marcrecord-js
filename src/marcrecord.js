@@ -2,6 +2,21 @@ function MarcRecord(marc) {
     this._marc = marc;
     this._fields = [];
 
+    // BIB types:
+    // positions 6 & 7 in LDR.
+    var rtype_re = {
+        BKS : /[at]{1}[acdm]{1}/,      // LOC BK
+        COM : /[m]{1}[abcdmsi]{1}/,    // LOC CF
+        MAP : /[ef]{1}[abcdmsi]{1}/,   // LOC MP
+        MIX : /[p]{1}[cdi]{1}/,        // LOC MX
+        REC : /[ij]{1}[abcdmsi]{1}/,   // LOC MU
+        SCO : /[cd]{1}[abcdmsi]{1}/,   // LOC MU (Score separate from SoundRec for OCLC)
+        SER : /[a]{1}[bsi]{1}/,        // LOC CNR (Continuing Resource)
+        VIS : /[gkro]{1}[abcdmsi]{1}/  // LOC VM
+    };
+    // Additional record types ...
+    rtype_re.AUT = /[z]{1}.{1}/ ;  // Authority Record.
+
     function MarcField(field, field_data){
 
         // See init block for initialization
@@ -122,12 +137,29 @@ function MarcRecord(marc) {
             return this.subfield_data.splice(index,1)[0];
         };
 
-        this.replace = function(newField){
-            // not for controlfields.  replaces subfield data with newField's
-            this.subfield_data = newField._subfields_clone();
-            this.ind1 = newField.ind1;
-            this.ind2 = newField.ind2;
-
+        this.replace = function(newData, pos){
+            if(this.is_control_field){
+                // newData should be a str, optional pos for splice.
+                if (typeof pos === 'undefined') {
+                    this.data = newData;
+                } else {
+                    var range = pos.match(/\d+/g); // format: '[11]' or '[11-14]'
+                    if(!range) return;
+                    var len = (range[1]) ? parseInt(range[1],10) - parseInt(range[0],10) + 1 : 1;
+                    // right-pad with spaces if newData is short.
+                    if(newData.length != len){
+                        newData = (newData + '                ').substr(0,len);
+                    }
+                    this.data = this.data.substr(0,range[0]) + newData +
+                            this.data.substr( parseInt(range[0],10) + len - this.data.length );
+                }
+            } else {
+                // replaces subfield data with newData's
+                this.subfield_data = newData._subfields_clone();
+                this.ind1 = newData.ind1;
+                this.ind2 = newData.ind2;
+            }
+            return this;
         };
 
         this.is_control_field = function(){
@@ -217,7 +249,7 @@ function MarcRecord(marc) {
 
     this.title = function(){
         var field = this.field('245');
-        return field.subfield('a') + ' ' + field.subfield('b');
+        return field.subfield('a'); //  + ' ' + field.subfield('b');
     };
 
     this.toJSON = function(){
@@ -238,6 +270,24 @@ function MarcRecord(marc) {
                 }
                 out.fields.push( sf );
             }
+        }
+        return out;
+    };
+
+    this.toString = function(){
+        var out = '';
+        for(var i=0; i<this._fields.length; i++){
+            out += this._fields[i].tag;
+            if(this._fields[i].is_control_field()){
+                out += ' ' + this._fields[i].data;
+            } else {
+                out += ' ' + this._fields[i].ind1 || ' ' + this._fields[i].ind2 || ' ';
+                for (var j = 0; j < this._fields[i].subfield_data.length; j++) {
+                    out += " $" + this._fields[i].subfield_data[j].code;
+                    out += this._fields[i].subfield_data[j].value;
+                }
+            }
+            out += "\n";
         }
         return out;
     };
@@ -272,19 +322,29 @@ function MarcRecord(marc) {
     * @param {string} ctrlspec A specifier indicating control field's tag, and optionally,
     * a substring to select from the field data. <br/>Examples:
     * <ul><li>ctrl('008')</li><li>ctrl('008[7]')  // position 7.</li><li>ctrl('008[7-8]') // positions 7&8</li></ul>
-    * @returns {string} The control field's value or a substring derived from it.
+    * @param {string} setter value.
+    * @returns {string} The control field's value or a substring derived from it.  Returns previous value if called with val.
     */
-    this.ctrl = function(ctrlspec) {
+    this.ctrl = function(ctrlspec, val) {
         var tag = ctrlspec.substr(0, 3);
         var pos = ctrlspec.substr(4).replace(/\[|\]/g, '').split(/-/);
+        var len = (pos[1]) ? pos[1] - pos[0] + 1 : 1;
         if (pos[0] === '') {
             return this.field(tag).data;
-        }
-        else if (pos.length === 1) {
-            return this.field(tag).data.substr(pos[0], 1);
-        }
-        else if (pos.length === 2) {
-            return this.field(tag).data.substr(pos[0], pos[1] - pos[0] + 1);
+        } else {
+            return this.field(tag).data.substr(pos[0], len);
         }
     };
+
+    /**
+    * @returns {string} The OCLC Code for Record Type.  (See rtype_re for definition)
+    */
+    this.rtype = function(){
+        var type_blvl = this.leader().substr(6,2);
+        for (var t in rtype_re) {
+            if (rtype_re[t].test(type_blvl)) return t;
+        }
+        return null;
+    };
+
 }
