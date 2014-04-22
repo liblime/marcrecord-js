@@ -1,5 +1,5 @@
 function MarcRecord(marc) {
-    this._marc = marc;
+    this._marc = marc;  // _marc is used for initialization.  _fields is the authoritative data.
     this._fields = [];
 
     // BIB types:
@@ -21,11 +21,12 @@ function MarcRecord(marc) {
 
         // See init block for initialization
 
-        this._subfields_clone = function(){
+        this._subfields_clone = function(f){
             //returns a copy of subfields object.
             var clone = [];
-            for(var i=0; i<this.subfield_data.length; i++){
-                clone.push( { code: this.subfield_data[i].code , value: this.subfield_data[i].value } );
+            var source = (f) ? f : this;  // allow cloning non-MarcField objects.
+            for(var i=0; i<source.subfield_data.length; i++){
+                clone.push( { code: source.subfield_data[i].code , value: source.subfield_data[i].value } );
             }
             return clone;
         };
@@ -118,18 +119,22 @@ function MarcRecord(marc) {
             var matched = this.subfields(subfield);
             return (matched.length) ? matched[0].value : null;
         };
-        this.m880 = function(){
-            // returns array of associated 880 MarcField objects.
-
+        this.subfield_at = function(i){
+            //return subfield i.
+            if( i < this.subfield_data.length){
+                return { code: this.subfield_data[i].code, value: this.subfield_data[i].value};
+            } else {
+                return null;
+            }
         };
         this.add_subfield = function(index, data) {
             // Creates a new subfield object, inserts it into record BEFORE specified index
-            // and returns it.  Will add to end if index isn't passed.
+            // and returns it.  Will add to end if index == -1.
             // data can be a subfield object or just the subfield code.
 
             var newSubfield = (typeof data == 'object') ? {code: data.code, value: data.value} : {code: data, value: ''};
-            if(index > this.subfield_data.length) index = this.subfield_data.length;
-            this.subfield_data.splice(index, 0, newSubfield);
+            if(index < 0 || index > this.subfield_data.length) index = this.subfield_data.length;
+            this.subfield_data.splice(index||0, 0, newSubfield);
             return newSubfield;
         };
 
@@ -138,7 +143,7 @@ function MarcRecord(marc) {
         };
 
         this.replace = function(newData, pos){
-            if(this.is_control_field){
+            if(this.is_control_field()){
                 // newData should be a str, optional pos for splice.
                 if (typeof pos === 'undefined') {
                     this.data = newData;
@@ -148,22 +153,37 @@ function MarcRecord(marc) {
                     var len = (range[1]) ? parseInt(range[1],10) - parseInt(range[0],10) + 1 : 1;
                     // right-pad with spaces if newData is short.
                     if(newData.length != len){
-                        newData = (newData + '                ').substr(0,len);
+                        newData = (newData + '                 ').substr(0,len);
                     }
-                    this.data = this.data.substr(0,range[0]) + newData +
-                            this.data.substr( parseInt(range[0],10) + len - this.data.length );
+                    this.data = (this.data + '                                        ').substr(0,range[0]) +
+                                    newData + this.data.substr( parseInt(range[0],10) + len );
                 }
+
             } else {
-                // replaces subfield data with newData's
-                this.subfield_data = newData._subfields_clone();
+                // replaces subfield data with newData's.
+                // hack -- allow _subfields_clone() to behave like a class method.
+                this.subfield_data = (newData._subfields_clone) ? newData._subfields_clone() : this._subfields_clone(newData);
                 this.ind1 = newData.ind1;
                 this.ind2 = newData.ind2;
+                this.tag = newData.tag;
+
             }
             return this;
+        };
+        this.replace_subfield = function(index, data){
+            if(index < this.subfield_data.length){
+                this.subfield_data[index] = {code: data.code, value: data.value};
+            }
         };
 
         this.is_control_field = function(){
             return (this.tag < '010') ? true : false;
+        };
+        this.index = function(){
+            // return field's index in the record.
+            for (var i = 0; i < this.record._fields.length; i++) {
+                if(this.record._fields[i]===this) return i;
+            }
         };
 
         // Object initialization
@@ -173,6 +193,7 @@ function MarcRecord(marc) {
 
         this.tag = field;
         this.subfield_data = [];
+        this.data = '';
 
         if(typeof field_data === 'object'){
             this.ind1 = field_data.ind1;
@@ -193,14 +214,17 @@ function MarcRecord(marc) {
 
     // MarcRecord object initialization
     this._fields = [ new MarcField('000', marc.leader) ];
+    this._fields[0].record = this;
 
     for (var i = 0; i < marc.fields.length-1; i+=2) {
-        this._fields.push(new MarcField(marc.fields[i], marc.fields[i+1]));
+        var field = new MarcField(marc.fields[i], marc.fields[i+1]);
+        field.record = this;
+        this._fields.push(field);
     }
 
     this.leader = function() {
         // FIXME relies on ordering.
-        return this._fields[0].data;
+        return this._fields[0].data || '';
     };
 
     this.fields = function(tag) {
@@ -219,13 +243,25 @@ function MarcRecord(marc) {
         return (matched_fields.length === 0) ? null : matched_fields[0];
     };
 
-    this.add_field = function(index, tag) {
+    this.add_field = function(tag, index) {
         // Creates a new MarcField object, inserts it into record BEFORE specified index
-        // and returns it.  Will add to end if index isn't passed.  (Also, you can't pass 0).
-        // TODO: Need to specify if it's a control field.
+        // and returns it.  Will add in numeric order if index isn't passed.  (Also, you can't pass 0).
 
-        var newField = new MarcField(tag, { subfields: ['', '']});
-        if(!index || index >= this._fields.length) index = this._fields.length;
+        var field_data = (tag < '010') ? '' : { subfields: ['', '']};
+        var newField = new MarcField(tag, field_data);
+        newField.record = this;
+        if(!index){
+            var last_tag = '';
+            for (var i = 0; i < this._fields.length; i++) {
+                index=i;
+                if(last_tag < tag && this._fields[i].tag > tag){
+                    break;
+                }
+                last_tag = this._fields[i].tag;
+            }
+        } else if(index >= this._fields.length){
+            index = this._fields.length;
+        }
         this._fields.splice(index, 0, newField);
         return newField;
     };
@@ -323,17 +359,24 @@ function MarcRecord(marc) {
     * a substring to select from the field data. <br/>Examples:
     * <ul><li>ctrl('008')</li><li>ctrl('008[7]')  // position 7.</li><li>ctrl('008[7-8]') // positions 7&8</li></ul>
     * @param {string} setter value.
-    * @returns {string} The control field's value or a substring derived from it.  Returns previous value if called with val.
+    * @returns {string} The control field's value or a substring derived from it.
     */
-    this.ctrl = function(ctrlspec, val) {
+    this.ctrl = function(ctrlspec) {
         var tag = ctrlspec.substr(0, 3);
         var pos = ctrlspec.substr(4).replace(/\[|\]/g, '').split(/-/);
         var len = (pos[1]) ? pos[1] - pos[0] + 1 : 1;
-        if (pos[0] === '') {
-            return this.field(tag).data;
+
+        if(tag && tag < '010'){
+            if(!this.field(tag)) return null;
+            if (pos[0] === '') {
+                return this.field(tag).data;
+            } else {
+                return this.field(tag).data.substr(pos[0], len);
+            }
         } else {
-            return this.field(tag).data.substr(pos[0], len);
+            return null;
         }
+
     };
 
     /**
@@ -346,5 +389,7 @@ function MarcRecord(marc) {
         }
         return null;
     };
+
+    this.format = (this.rtype() == 'AUT') ? 'auth' : 'bib';
 
 }
