@@ -15,7 +15,8 @@ function MarcRecord(marc) {
         VIS : /[gkro]{1}[abcdmsi]{1}/  // LOC VM
     };
     // Additional record types ...
-    rtype_re.AUT = /[z]{1}.{1}/ ;  // Authority Record.
+    rtype_re.AUTH = /[z]{1}.{1}/ ;  // Authority Record.
+    rtype_re.MFHD = /[uvxy]{1}.{1}/ ;  // MFHD Record.
 
     function MarcField(field, field_data){
 
@@ -390,6 +391,7 @@ function MarcRecord(marc) {
         return null;
     };
 
-    this.format = (this.rtype() == 'AUT') ? 'auth' : 'bib';
+    this.format = (this.rtype() == 'AUTH') ? 'auth' :
+                        (this.rtype() == 'MFHD') ? 'mfhd' :'bib';
 
 }
