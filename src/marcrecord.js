@@ -286,7 +286,7 @@ function MarcRecord(marc) {
 
     this.title = function(){
         var field = this.field('245');
-        return field.subfield('a'); //  + ' ' + field.subfield('b');
+        return (field.subfield('a')||'').replace(/\s*[\/:\.,;]\s*/,'');
     };
 
     this.toJSON = function(){
