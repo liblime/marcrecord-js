@@ -186,6 +186,27 @@ function MarcRecord(marc) {
                 if(this.record._fields[i]===this) return i;
             }
         };
+        this.del = function(){
+            for (var i = 0; i < this.record._fields.length; i++) {
+                if(this.record._fields[i]===this){
+                    this.record.delete_field(i);
+                    return;
+                }
+            }
+        };
+        this.clone = function(){
+            var field_data = {
+                ind1 : this.ind1,
+                ind2: this.ind2,
+                subfields: []
+            };
+            for(var i=0; i<this.subfield_data.length; i++){
+                field_data.subfields.push(this.subfield_data[i].code);
+                field_data.subfields.push(this.subfield_data[i].value);
+            }
+
+            return new MarcField(this.field, field_data);
+        };
 
         // Object initialization
 
@@ -286,6 +307,7 @@ function MarcRecord(marc) {
 
     this.title = function(){
         var field = this.field('245');
+        if(!field) return null;
         return (field.subfield('a')||'').replace(/\s*[\/:\.,;]\s*/,'');
     };
 
@@ -381,7 +403,7 @@ function MarcRecord(marc) {
     };
 
     /**
-    * @returns {string} The OCLC Code for Record Type.  (See rtype_re for definition)
+    * @returns {string} The OCLC Code for Record Type (bibs), or 'AUTH' or 'MFHD'  (See rtype_re for definition)
     */
     this.rtype = function(){
         var type_blvl = this.leader().substr(6,2);
@@ -393,5 +415,10 @@ function MarcRecord(marc) {
 
     this.format = (this.rtype() == 'AUTH') ? 'auth' :
                         (this.rtype() == 'MFHD') ? 'mfhd' :'bib';
+
+    this.rcn = function(){
+        if(this.rtype()!='AUTH') return null;
+        return '(' + (this.field('003')||{}).data + ')' + (this.field('001')||{}).data;
+    };
 
 }
