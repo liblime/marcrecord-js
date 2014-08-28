@@ -22,7 +22,7 @@ var marcjson = {
                 ]
             },
             '245', {
-                ind1: '#', ind2: '#',
+                ind1: ' ', ind2: ' ',
                 subfields: [
                     'a', 'A Title:',
                     'b', 'of sorts'
@@ -34,12 +34,12 @@ var marcjson = {
                 'a', 'The Man' ]
             },
             '700', {
-                ind1: '#', ind2: '#',
+                ind1: ' ', ind2: ' ',
                 subfields: [
                 'a', 'uhuhuhgh' ]
             },
             '700', {
-                ind1: '#', ind2: '#',
+                ind1: ' ', ind2: ' ',
                 subfields: [
                 'a', 'pokpok' ]
             }
@@ -154,7 +154,7 @@ describe('MARC-HTML output', function(){
 describe('Variable Field Mutation', function(){
     var added_field, deleted_field;
     beforeEach(function(){
-        added_field = r.add_field(7,'111');
+        added_field = r.add_field('111',7);
     });
     afterEach(function(){
         deleted_field = r.delete_field(7);
@@ -172,7 +172,6 @@ describe('Variable Field Mutation', function(){
 
 describe('Control Field Mutation', function(){
     var old_ldr = r.leader();
-    console.log(old_ldr);
     afterEach(function(){
         r.field('000').replace(old_ldr);
     });
@@ -190,13 +189,13 @@ describe('Control Field Mutation', function(){
 
 describe('Title', function(){
     it('can be retrieved', function(){
-        expect(r.title()).toEqual( "A Title:" );
+        expect(r.title()).toEqual( "A Title" );
     });
 });
 
 describe('COinS', function(){
     it('can be generated', function(){
-        expect(r.coins()).toEqual( "ctx_ver=Z39.88-2004&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&rft.btitle=A+Title%3A&rtf.au%5B%5D=The+Man&rtf.au%5B%5D=uhuhuhgh&rtf.au%5B%5D=pokpok" );
+        expect(r.coins()).toEqual( "ctx_ver=Z39.88-2004&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&rft.btitle=A+Title&rtf.au%5B%5D=The+Man&rtf.au%5B%5D=uhuhuhgh&rtf.au%5B%5D=pokpok" );
     });
 });
 
