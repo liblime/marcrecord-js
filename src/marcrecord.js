@@ -1,3 +1,18 @@
+ /*
+  * marcrecord.js v1.0.0
+  * Copyright 2014 PTFS/LibLime
+  * https://github.com/liblime/marcrecord-js
+  * License: BSD
+  */
+
+// Note on dependencies:
+// This library has no dependencies, with the exception of th COinS method, which
+// requires jQuery.
+
+/** @class
+*  @param {object} marc A MARC-JSON object representing a record.
+*   * format : {@link http://search.cpan.org/~cfouts/MARC-File-JSON-0.003/lib/MARC/File/JSON.pm}
+*/
 function MarcRecord(marc) {
     this._marc = marc;  // _marc is used for initialization.  _fields is the authoritative data.
     this._fields = [];
@@ -18,9 +33,19 @@ function MarcRecord(marc) {
     rtype_re.AUTH = /[z]{1}.{1}/ ;  // Authority Record.
     rtype_re.MFHD = /[uvxy]{1}.{1}/ ;  // MFHD Record.
 
+   /** @class
+     *  @param field {string} three character field label.
+     *  @param field_data {object} MARC-JSON field data as Object OR Pass as string for data fields.
+     *  @param field_data.ind1 {string} 1-char indicator 1.
+     *  @param field_data.ind2 {string} 1-char indicator 2.
+     *  @param field_data.subfields {string[]} Interleaved array of subfield code / subfield value .
+     *  @property tag {string} 3-char MARC field label.
+     *  @property subfield_data {object[]} Subfields, as array of { code: {string}, value: {string} } objects.
+     *  @property ind1 {string} 1-char indicator 1.
+     *  @property ind2 {string} 1-char indicator 2.
+     *  @property data {string} If `this.tag` < 010, the control field data.
+    */
     function MarcField(field, field_data){
-
-        // See init block for initialization
 
         this._subfields_clone = function(f){
             //returns a copy of subfields object.
@@ -32,11 +57,16 @@ function MarcRecord(marc) {
             return clone;
         };
 
+
+      /** List subfields as code / value objects.
+      * @param filterspec {string}  a list of subfields to include in output.  e.g. 'abhjm'.
+      * @param options {object} options object
+      * @param options.reorder {boolean} Order output by `filterspec`.  If `false`, subfields that match are returned in the order they appear in the record.
+      * @returns {object[]} Subfield data as {code: {string}, value: {string}} .<br />
+      *   * If NO filterspec is provided, returns references to internal data (modifying will mutate the MarcRecord object).
+      *   * If filterspec is provided, this method returns copies of the subfield data.
+      */
         this.subfields = function(filterspec, options){
-            // filterspec is simply a list of subfields.  e.g. 'abhjm'.
-            // options:  { reorder: bool }.
-            // Note filterspec order does not influence return value unless options.reorder is true.
-            // subfields that match are returned in the order they appear in the record.
 
             if(this.is_control_field()) return null;
 //            if(!filterspec) return this._subfields_clone();
@@ -67,20 +97,26 @@ function MarcRecord(marc) {
             return newsubfields;
         };
 
-        this.indicator = function(i){
+        /** Value of indicator i.
+        * @param i {number} 1 or 2.
+        * @returns {string} 1-char indicator value.
+        */
+
+        this.indicator = function(i) {
             return this['ind'+parseInt(i,10)];
         };
 
-        this.html = function(options){
-            // output the field as a marc-html string.
-            // options:
-            // { filterEach : specify a filter function to pass each subfield through
-            //      filterLast : apply filter function to last subfield.
-            //      delimiter : character(s) to insert between subfields.
-            //              //  This is only here for IE7.  else, css pseudoelements would work.
-            //      filter : only include these subfields.
-            //      reorder : reorder by order in filter param.
-            // }
+        /** Output the field as a marc-html string.
+         * @param options
+         * @param options.filterEach {function(subfield_value)} specify a filter function to pass each subfield through
+         * @param options.filterLast {function(subfield_value)} apply filter function to last subfield.
+         * @param options.delimiter {string} character(s) to insert between subfields.
+         * @param options.filter {string} only include these subfields ('abc' includes all $a, $b, & $c).
+         * @param options.reorder {boolean} reorder by order in filter param.
+         */
+
+        this.html = function( /**Object*/ options){
+
             if(!options) options = { delimiter: null };
             var i1 = (!this.ind1 || this.ind1 === ' ' || this.ind1 === '#') ? '' : this.ind1;
             var i2 = (!this.ind2 || this.ind2 === ' ' || this.ind2 === '#') ? '' : this.ind2;
@@ -114,12 +150,20 @@ function MarcRecord(marc) {
             return output + '</span>';
 
         };
+
+        /** Ouput single subfield value as a string.
+        * @param subfield_code {string} 1-char subfield code.
+        * @returns {string} value of first matching subfield, or null.
+        */
         this.subfield = function(subfield){
-            // ouput subfield value as text.
-            // if subfield is repeated, only outputs the first value.
             var matched = this.subfields(subfield);
             return (matched.length) ? matched[0].value : null;
         };
+
+        /** Ouput single subfield as `{code: {string}, value: {string}}` object.
+        * @param index {number} index of subfield.
+        * @returns {object} Reference to subfield data (mutable), or null.
+        */
         this.subfield_at = function(i){
             //return subfield i.
             if( i < this.subfield_data.length){
@@ -128,28 +172,41 @@ function MarcRecord(marc) {
                 return null;
             }
         };
-        this.add_subfield = function(index, data) {
-            // Creates a new subfield object, inserts it into record BEFORE specified index
-            // and returns it.  Will add to end if index == -1.
-            // data can be a subfield object or just the subfield code.
 
+        /** Insert single subfield into MarcField at index position.
+        * @param index {number} Index of subfield to insert before.  Use -1 to append.
+        * @param subfield_data {object} `{code: {string}, value: {string}}` object.
+        *    - Also accepts just the code as a string to add an empty subfield.
+        * @returns {object} Reference to subfield data (mutable).
+        */
+        this.add_subfield = function(index, data) {
             var newSubfield = (typeof data == 'object') ? {code: data.code, value: data.value} : {code: data, value: ''};
             if(index < 0 || index > this.subfield_data.length) index = this.subfield_data.length;
             this.subfield_data.splice(index||0, 0, newSubfield);
             return newSubfield;
         };
 
+        /** Deletes subfield at given index.
+        * @param index {number} index of subfield.
+        * @returns {object} 1-element array of removed subfield data.
+        */
         this.delete_subfield = function(index){
             return this.subfield_data.splice(index,1)[0];
         };
 
+        /** Replace all subfield and indicator data in field, or substring in control field at index position.
+        * @param subfield_data {object} `{code: {string}, value: {string}}` object.
+        *    - Or accepts string to replace portion of control field.
+        * @param position {string} substring, format: '[11]' or '[11-14]'
+        * @returns {MarcField} Reference to the field.
+        */
         this.replace = function(newData, pos){
             if(this.is_control_field()){
                 // newData should be a str, optional pos for splice.
                 if (typeof pos === 'undefined') {
                     this.data = newData;
                 } else {
-                    var range = pos.match(/\d+/g); // format: '[11]' or '[11-14]'
+                    var range = pos.match(/\d+/g);
                     if(!range) return;
                     var len = (range[1]) ? parseInt(range[1],10) - parseInt(range[0],10) + 1 : 1;
                     // right-pad with spaces if newData is short.
@@ -171,10 +228,17 @@ function MarcRecord(marc) {
             }
             return this;
         };
+
+        /** Replace a single subfield in field.
+        * @param index {number} index of subfield.
+        * @param subfield_data {object} `{code: {string}, value: {string}}` object.
+        * @returns {object} Reference to the subfield.
+        */
         this.replace_subfield = function(index, data){
             if(index < this.subfield_data.length){
                 this.subfield_data[index] = {code: data.code, value: data.value};
             }
+            return this.subfield_data[index];
         };
 
         this.is_control_field = function(){
@@ -194,6 +258,10 @@ function MarcRecord(marc) {
                 }
             }
         };
+
+        /** Clone a field.
+        * @returns {MarcField} The cloned field.
+        */
         this.clone = function(){
             var field_data = {
                 ind1 : this.ind1,
@@ -244,11 +312,18 @@ function MarcRecord(marc) {
         this._fields.push(field);
     }
 
+    /** Output MARC LDR.
+    * @returns {string}
+    */
     this.leader = function() {
         // FIXME relies on ordering.
         return this._fields[0].data || '';
     };
 
+    /** Return Marc Fields matching regex.
+    *  @param tag_re {string} Regex to match, e.g. '245', '2..' etc.
+    *  @returns {MarcField[]}
+    */
     this.fields = function(tag) {
         var out = [];
         var tag_re = new RegExp(tag);
@@ -260,16 +335,24 @@ function MarcRecord(marc) {
         return out;
     };
 
+    /** Return first Marc Field matching tag.
+    *  @param tag {string} 3-char MARC field label
+    *  @returns {MarcField[]} (or null if no field in record)
+    */
     this.field = function(tag) {
         var matched_fields = this.fields(tag);
         return (matched_fields.length === 0) ? null : matched_fields[0];
     };
 
+    /** Creates a new (empty) MarcField object, inserts it into record BEFORE specified index.  Will add in numeric order if index isn't passed.
+    *  @param tag {string} 3-char MARC field label
+    *  @param [index] Position at which to insert.
+    *  @returns {MarcField}
+    */
     this.add_field = function(tag, index) {
-        // Creates a new MarcField object, inserts it into record BEFORE specified index
-        // and returns it.  Will add in numeric order if index isn't passed.  (Also, you can't pass 0).
+        // (Also, you can't pass 0).
 
-        var field_data = (tag < '010') ? '' : { subfields: ['', '']};
+        var field_data = (tag < '010') ? '' : { subfields: ['a', '']};
         var newField = new MarcField(tag, field_data);
         newField.record = this;
         if(!index){
@@ -292,11 +375,20 @@ function MarcRecord(marc) {
         return this._fields.splice(index,1)[0];
     };
 
+    /** Test for existence of MARC field within record.
+    * @param {string} tag 3-char MARC field label.
+    * @returns {boolean} True if the record has one or more fields matching /tag/.
+    */
     this.has = function (tag) {
         // TODO: accept a tagspec here.
         return this.fields(tag).length > 0;
     };
 
+    /** Return first matching subfield value of /tagspec/
+    * @param {string} tagspec 4-char MARC field label and subfield code
+    * @returns {boolean} True if the record has one or more fields matching /tag/.
+    * @example `record.subfield('245b');` // Returns subtitle.
+    */
     this.subfield = function(tagspec) {
         // convenience method.
         // marc.subfield('100a') === marc.field('100').subfield('a')
@@ -304,6 +396,10 @@ function MarcRecord(marc) {
         return (field) ? field.subfield(tagspec.substr(3,1)) : null;
 
     };
+
+    /**
+    * @returns {string} Punctuation-chopped title.
+    */
 
     this.title = function(){
         var field = this.field('245');
@@ -379,9 +475,10 @@ function MarcRecord(marc) {
     };
     /**
     * @param {string} ctrlspec A specifier indicating control field's tag, and optionally,
-    * a substring to select from the field data. <br/>Examples:
-    * <ul><li>ctrl('008')</li><li>ctrl('008[7]')  // position 7.</li><li>ctrl('008[7-8]') // positions 7&8</li></ul>
-    * @param {string} setter value.
+    * a substring to select from the field data, e.g.
+    *  * ctrl('008')
+    *  * ctrl('008[7]')  // position 7.
+    *  * ctrl('008[7-8]') // positions 7&8
     * @returns {string} The control field's value or a substring derived from it.
     */
     this.ctrl = function(ctrlspec) {
@@ -402,8 +499,7 @@ function MarcRecord(marc) {
 
     };
 
-    /**
-    * @returns {string} The OCLC Code for Record Type (bibs), or 'AUTH' or 'MFHD'  (See rtype_re for definition)
+    /** @returns {string} The OCLC Code for Record Type (bibs), or 'AUTH' or 'MFHD'  (See rtype_re for definition)
     */
     this.rtype = function(){
         var type_blvl = this.leader().substr(6,2);
@@ -413,9 +509,14 @@ function MarcRecord(marc) {
         return null;
     };
 
+    /** MARC format ('bib', 'auth' or 'mfhd')
+    * @type string
+    */
     this.format = (this.rtype() == 'AUTH') ? 'auth' :
                         (this.rtype() == 'MFHD') ? 'mfhd' :'bib';
 
+    /** @returns {string} For Authority records, return the rcn.
+    */
     this.rcn = function(){
         if(this.rtype()!='AUTH') return null;
         return '(' + (this.field('003')||{}).data + ')' + (this.field('001')||{}).data;
