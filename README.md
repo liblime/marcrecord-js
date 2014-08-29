@@ -70,7 +70,7 @@ It uses the [MARC-JSON format](http://search.cpan.org/~cfouts/MARC-File-JSON-0.0
 
 ```
 
-API documentation is available [here](https://github.com/liblime/marcrecord-js/blob/master/doc/MarcRecord.html).
+API documentation is available [here](http://liblime.github.io/marcrecord-js/MarcRecord.html).
 
 Licenced under the [3-clause BSD license](https://github.com/liblime/marcrecord-js/blob/master/LICENSE.txt).
 
