@@ -23,37 +23,41 @@
 
 
 
+
 <section>
 
 <header>
-    <h2>
-    MarcRecord
-    </h2>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>MarcRecord<span class="signature">(marc)</span><span class="type-signature"></span></h2>
+        
     
 </header>
 
 <article>
     <div class="container-overview">
     
+        
 
     
-        
-<dt>
+
+    
     <h4 class="name" id="MarcRecord"><span class="type-signature"></span>new MarcRecord<span class="signature">(marc)</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
     
 
     
 
-    
 
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
     
-        <h5>Parameters:</h5>
-        
 
 <table class="params">
     <thead>
@@ -93,20 +97,20 @@
 
             
 
-            <td class="description last"><p>A MARC-JSON object representing a record.</p>
-<ul>
-<li>format : <a href="http://search.cpan.org/~cfouts/MARC-File-JSON-0.003/lib/MARC/File/JSON.pm">http://search.cpan.org/~cfouts/MARC-File-JSON-0.003/lib/MARC/File/JSON.pm</a></li>
-</ul></td>
+            <td class="description last">A MARC-JSON object representing a record.
+  * format : <a href="http://search.cpan.org/~cfouts/MARC-File-JSON-0.003/lib/MARC/File/JSON.pm">http://search.cpan.org/~cfouts/MARC-File-JSON-0.003/lib/MARC/File/JSON.pm</a></td>
         </tr>
 
     
     </tbody>
 </table>
-    
 
-    
+
+
+
+
+
 <dl class="details">
-    
 
     
 
@@ -124,6 +128,19 @@
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line426">line 426</a>
+    </li></ul></dd>
     
 
     
@@ -134,20 +151,23 @@
 </dl>
 
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-</dd>
+
+
+
+
+
+
+
+
+
+
+
 
     
     </div>
@@ -159,50 +179,42 @@
     
 
     
-        <h3 class="subsection-title">Classes</h3>
 
-        <dl>
-            <dt><a href="MarcRecord-MarcField.html">MarcField</a></dt>
-            <dd></dd>
-        </dl>
     
-
-     
 
     
 
     
         <h3 class="subsection-title">Members</h3>
 
-        <dl>
+        
             
-<dt>
-    <h4 class="name" id="format"><span class="type-signature"></span>format<span class="type-signature"> :string</span></h4>
+<h4 class="name" id="format"><span class="type-signature"></span>format<span class="type-signature"> :string</span></h4>
 
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>MARC format ('bib', 'auth' or 'mfhd')</p>
-    </div>
-    
 
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
+
+
+<div class="description">
+    MARC format ('bib', 'auth' or 'mfhd')
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
 <span class="param-type">string</span>
 
 
-            </li>
-        </ul>
-    
+        </li>
+    </ul>
 
-    
+
+
+
+
 <dl class="details">
-    
 
     
 
@@ -220,6 +232,19 @@
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line678">line 678</a>
+    </li></ul></dd>
     
 
     
@@ -230,39 +255,43 @@
 </dl>
 
 
-    
 
-    
-</dd>
 
-        </dl>
+
+
+        
     
 
     
         <h3 class="subsection-title">Methods</h3>
 
-        <dl>
-            
-<dt>
-    <h4 class="name" id="add_field"><span class="type-signature"></span>add_field<span class="signature">(tag, index<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {MarcField}</span></h4>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Creates a new (empty) MarcField object, inserts it into record BEFORE specified index.  Will add in numeric order if index isn't passed.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-        <h5>Parameters:</h5>
         
+            
+
+    
+
+    
+    <h4 class="name" id="add_field"><span class="type-signature"></span>add_field<span class="signature">(tag, index<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="MarcField.html">MarcField</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates a new (empty) MarcField object, inserts it into record BEFORE specified index.  Will add in numeric order if index isn't passed.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
 
 <table class="params">
     <thead>
@@ -295,6 +324,9 @@
             
                 
 <span class="param-type">string</span>
+|
+
+<span class="param-type"><a href="MarcField.html">MarcField</a></span>
 
 
             
@@ -312,7 +344,7 @@
 
             
 
-            <td class="description last"><p>3-char MARC field label</p></td>
+            <td class="description last">3-char MARC tag or MarcField object.</td>
         </tr>
 
     
@@ -340,17 +372,19 @@
 
             
 
-            <td class="description last"><p>Position at which to insert.</p></td>
+            <td class="description last">Position at which to insert.</td>
         </tr>
 
     
     </tbody>
 </table>
-    
 
-    
+
+
+
+
+
 <dl class="details">
-    
 
     
 
@@ -368,6 +402,19 @@
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line497">line 497</a>
+    </li></ul></dd>
     
 
     
@@ -378,20 +425,22 @@
 </dl>
 
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-    <h5>Returns:</h5>
-    
-            
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 
 
 <dl>
@@ -400,35 +449,41 @@
     </dt>
     <dd>
         
-<span class="param-type">MarcField</span>
+<span class="param-type"><a href="MarcField.html">MarcField</a></span>
 
 
     </dd>
 </dl>
 
-        
-
     
-</dd>
+
+
+
+
 
         
             
-<dt>
-    <h4 class="name" id="ctrl"><span class="type-signature"></span>ctrl<span class="signature">(ctrlspec)</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-</dt>
-<dd>
 
     
 
     
-
+    <h4 class="name" id="ctrl"><span class="type-signature"></span>ctrl<span class="signature">(ctrlspec, setter)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
 
     
-        <h5>Parameters:</h5>
-        
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
 
 <table class="params">
     <thead>
@@ -468,23 +523,44 @@
 
             
 
-            <td class="description last"><p>A specifier indicating control field's tag, and optionally,
-a substring to select from the field data, e.g.</p>
-<ul>
-<li>ctrl('008')</li>
-<li>ctrl('008[7]')  // position 7.</li>
-<li>ctrl('008[7-8]') // positions 7&amp;8</li>
-</ul></td>
+            <td class="description last">A specifier indicating control field's tag, and optionally,
+a substring to select from the field data. <br/>Examples:
+<ul><li>ctrl('008')</li><li>ctrl('008[7]')  // position 7.</li><li>ctrl('008[7-8]') // positions 7&8</li></ul></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>setter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">value.</td>
         </tr>
 
     
     </tbody>
 </table>
-    
 
-    
+
+
+
+
+
 <dl class="details">
-    
 
     
 
@@ -502,6 +578,19 @@ a substring to select from the field data, e.g.</p>
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line646">line 646</a>
+    </li></ul></dd>
     
 
     
@@ -512,22 +601,24 @@ a substring to select from the field data, e.g.</p>
 </dl>
 
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-    <h5>Returns:</h5>
-    
-            
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 <div class="param-desc">
-    <p>The control field's value or a substring derived from it.</p>
+    The control field's value or a substring derived from it.
 </div>
 
 
@@ -544,33 +635,201 @@ a substring to select from the field data, e.g.</p>
     </dd>
 </dl>
 
-        
-
     
-</dd>
+
+
+
+
 
         
             
-<dt>
-    <h4 class="name" id="field"><span class="type-signature"></span>field<span class="signature">(tag)</span><span class="type-signature"> &rarr; {Array.&lt;MarcField>}</span></h4>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Return first Marc Field matching tag.</p>
-    </div>
-    
 
     
 
     
+    <h4 class="name" id="delete_field"><span class="type-signature"></span>delete_field<span class="signature">(index<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="MarcField.html">MarcField</a>}</span></h4>
+    
 
     
-        <h5>Parameters:</h5>
+
+
+
+<div class="description">
+    Removes field from record at specified index, returns removed field object.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
         
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Position at which to insert.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line530">line 530</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="MarcField.html">MarcField</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="field"><span class="type-signature"></span>field<span class="signature">(tag)</span><span class="type-signature"> &rarr; {Array.&lt;<a href="MarcField.html">MarcField</a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Return first Marc Field matching tag.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
 
 <table class="params">
     <thead>
@@ -610,17 +869,19 @@ a substring to select from the field data, e.g.</p>
 
             
 
-            <td class="description last"><p>3-char MARC field label</p></td>
+            <td class="description last">3-char MARC field label</td>
         </tr>
 
     
     </tbody>
 </table>
-    
 
-    
+
+
+
+
+
 <dl class="details">
-    
 
     
 
@@ -638,6 +899,19 @@ a substring to select from the field data, e.g.</p>
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line483">line 483</a>
+    </li></ul></dd>
     
 
     
@@ -648,22 +922,24 @@ a substring to select from the field data, e.g.</p>
 </dl>
 
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-    <h5>Returns:</h5>
-    
-            
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 <div class="param-desc">
-    <p>(or null if no field in record)</p>
+    (or null if no field in record)
 </div>
 
 
@@ -674,39 +950,45 @@ a substring to select from the field data, e.g.</p>
     </dt>
     <dd>
         
-<span class="param-type">Array.&lt;MarcField></span>
+<span class="param-type">Array.&lt;<a href="MarcField.html">MarcField</a>></span>
 
 
     </dd>
 </dl>
 
-        
-
     
-</dd>
+
+
+
+
 
         
             
-<dt>
-    <h4 class="name" id="fields"><span class="type-signature"></span>fields<span class="signature">(tag_re)</span><span class="type-signature"> &rarr; {Array.&lt;MarcField>}</span></h4>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Return Marc Fields matching regex.</p>
-    </div>
-    
 
     
 
     
+    <h4 class="name" id="fields"><span class="type-signature"></span>fields<span class="signature">(tag_re)</span><span class="type-signature"> &rarr; {Array.&lt;<a href="MarcField.html">MarcField</a>>}</span></h4>
+    
 
     
-        <h5>Parameters:</h5>
-        
+
+
+
+<div class="description">
+    Return Marc Fields matching regex.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
 
 <table class="params">
     <thead>
@@ -746,17 +1028,19 @@ a substring to select from the field data, e.g.</p>
 
             
 
-            <td class="description last"><p>Regex to match, e.g. '245', '2..' etc.</p></td>
+            <td class="description last">Regex to match, e.g. '245', '2..' etc.</td>
         </tr>
 
     
     </tbody>
 </table>
-    
 
-    
+
+
+
+
+
 <dl class="details">
-    
 
     
 
@@ -774,6 +1058,19 @@ a substring to select from the field data, e.g.</p>
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line468">line 468</a>
+    </li></ul></dd>
     
 
     
@@ -784,20 +1081,22 @@ a substring to select from the field data, e.g.</p>
 </dl>
 
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-    <h5>Returns:</h5>
-    
-            
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 
 
 <dl>
@@ -806,39 +1105,45 @@ a substring to select from the field data, e.g.</p>
     </dt>
     <dd>
         
-<span class="param-type">Array.&lt;MarcField></span>
+<span class="param-type">Array.&lt;<a href="MarcField.html">MarcField</a>></span>
 
 
     </dd>
 </dl>
 
-        
-
     
-</dd>
+
+
+
+
 
         
             
-<dt>
-    <h4 class="name" id="has"><span class="type-signature"></span>has<span class="signature">(tag)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Test for existence of MARC field within record.</p>
-    </div>
-    
 
     
 
     
+    <h4 class="name" id="has"><span class="type-signature"></span>has<span class="signature">(tag, subfield-code)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
 
     
-        <h5>Parameters:</h5>
-        
+
+
+
+<div class="description">
+    Test for existence of MARC field within record.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
 
 <table class="params">
     <thead>
@@ -878,17 +1183,42 @@ a substring to select from the field data, e.g.</p>
 
             
 
-            <td class="description last"><p>3-char MARC field label.</p></td>
+            <td class="description last">3-char MARC field label.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>subfield-code</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">(optional)</td>
         </tr>
 
     
     </tbody>
 </table>
-    
 
-    
+
+
+
+
+
 <dl class="details">
-    
 
     
 
@@ -906,6 +1236,19 @@ a substring to select from the field data, e.g.</p>
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line548">line 548</a>
+    </li></ul></dd>
     
 
     
@@ -916,22 +1259,24 @@ a substring to select from the field data, e.g.</p>
 </dl>
 
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-    <h5>Returns:</h5>
-    
-            
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 <div class="param-desc">
-    <p>True if the record has one or more fields matching /tag/.</p>
+    True if the record has one or more fields matching /tag/.
 </div>
 
 
@@ -948,35 +1293,42 @@ a substring to select from the field data, e.g.</p>
     </dd>
 </dl>
 
-        
-
     
-</dd>
+
+
+
+
 
         
             
-<dt>
+
+    
+
+    
     <h4 class="name" id="leader"><span class="type-signature"></span>leader<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Output MARC LDR.</p>
-    </div>
     
 
     
 
-    
 
-    
 
-    
+<div class="description">
+    Output MARC LDR.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 <dl class="details">
-    
 
     
 
@@ -994,6 +1346,19 @@ a substring to select from the field data, e.g.</p>
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line459">line 459</a>
+    </li></ul></dd>
     
 
     
@@ -1004,20 +1369,22 @@ a substring to select from the field data, e.g.</p>
 </dl>
 
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-    <h5>Returns:</h5>
-    
-            
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 
 
 <dl>
@@ -1032,31 +1399,38 @@ a substring to select from the field data, e.g.</p>
     </dd>
 </dl>
 
-        
-
     
-</dd>
+
+
+
+
 
         
             
-<dt>
+
+    
+
+    
     <h4 class="name" id="rcn"><span class="type-signature"></span>rcn<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-</dt>
-<dd>
-
     
 
     
 
-    
 
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
 <dl class="details">
-    
 
     
 
@@ -1074,6 +1448,19 @@ a substring to select from the field data, e.g.</p>
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line683">line 683</a>
+    </li></ul></dd>
     
 
     
@@ -1084,22 +1471,24 @@ a substring to select from the field data, e.g.</p>
 </dl>
 
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-    <h5>Returns:</h5>
-    
-            
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 <div class="param-desc">
-    <p>For Authority records, return the rcn.</p>
+    For Authority records, return the rcn.
 </div>
 
 
@@ -1116,31 +1505,38 @@ a substring to select from the field data, e.g.</p>
     </dd>
 </dl>
 
-        
-
     
-</dd>
+
+
+
+
 
         
             
-<dt>
+
+    
+
+    
     <h4 class="name" id="rtype"><span class="type-signature"></span>rtype<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-</dt>
-<dd>
-
     
 
     
 
-    
 
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
 <dl class="details">
-    
 
     
 
@@ -1158,6 +1554,19 @@ a substring to select from the field data, e.g.</p>
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line667">line 667</a>
+    </li></ul></dd>
     
 
     
@@ -1168,22 +1577,24 @@ a substring to select from the field data, e.g.</p>
 </dl>
 
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-    <h5>Returns:</h5>
-    
-            
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 <div class="param-desc">
-    <p>The OCLC Code for Record Type (bibs), or 'AUTH' or 'MFHD'  (See rtype_re for definition)</p>
+    The OCLC Code for Record Type (bibs), or 'AUTH' or 'MFHD'  (See rtype_re for definition)
 </div>
 
 
@@ -1200,33 +1611,39 @@ a substring to select from the field data, e.g.</p>
     </dd>
 </dl>
 
-        
-
     
-</dd>
+
+
+
+
 
         
             
-<dt>
-    <h4 class="name" id="subfield"><span class="type-signature"></span>subfield<span class="signature">(tagspec)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Return first matching subfield value of /tagspec/</p>
-    </div>
-    
 
     
 
     
+    <h4 class="name" id="subfield"><span class="type-signature"></span>subfield<span class="signature">(tagspec)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
 
     
-        <h5>Parameters:</h5>
-        
+
+
+
+<div class="description">
+    Return first matching subfield value of /tagspec/
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
 
 <table class="params">
     <thead>
@@ -1266,17 +1683,19 @@ a substring to select from the field data, e.g.</p>
 
             
 
-            <td class="description last"><p>4-char MARC field label and subfield code</p></td>
+            <td class="description last">4-char MARC field label and subfield code</td>
         </tr>
 
     
     </tbody>
 </table>
-    
 
-    
+
+
+
+
+
 <dl class="details">
-    
 
     
 
@@ -1294,6 +1713,19 @@ a substring to select from the field data, e.g.</p>
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line568">line 568</a>
+    </li></ul></dd>
     
 
     
@@ -1304,111 +1736,24 @@ a substring to select from the field data, e.g.</p>
 </dl>
 
 
-    
 
-    
 
-    
 
-    
 
-    
 
-    
-    <h5>Returns:</h5>
-    
-            
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
 <div class="param-desc">
-    <p>True if the record has one or more fields matching /tag/.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-    </dd>
-</dl>
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>`record.subfield('245b');` // Returns subtitle.</code></pre>
-
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="title"><span class="type-signature"></span>title<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Punctuation-chopped title.</p>
+    True if the record has one or more fields matching /tag/.
 </div>
 
 
@@ -1425,12 +1770,124 @@ a substring to select from the field data, e.g.</p>
     </dd>
 </dl>
 
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>`record.subfield('245b');` // Returns subtitle.</code></pre>
+
+
+
         
+            
 
     
-</dd>
 
-        </dl>
+    
+    <h4 class="name" id="title"><span class="type-signature"></span>title<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="marcrecord.js.html">marcrecord.js</a>, <a href="marcrecord.js.html#line579">line 579</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Punctuation-chopped title.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
     
 
     
@@ -1446,13 +1903,13 @@ a substring to select from the field data, e.g.</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="MarcRecord.html">MarcRecord</a></li><li><a href="MarcRecord-MarcField.html">MarcField</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="MarcField.html">MarcField</a></li><li><a href="MarcRecord.html">MarcRecord</a></li></ul>
 </nav>
 
-<br clear="both">
+<br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> on Thu Aug 28 2014 14:33:27 GMT-0700 (PDT)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon May 10 2021 15:15:02 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

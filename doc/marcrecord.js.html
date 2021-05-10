@@ -1,4 +1,32 @@
-/*
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: marcrecord.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: marcrecord.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
 * marcrecord.js v1.0.0
 * Copyright 2014-2021 PTFS/LibLime
 * https://github.com/liblime/marcrecord-js
@@ -14,7 +42,7 @@
  *  @property subfield_data {object[]} Subfields, as array of { code: {string}, value: {string} } objects.
  *  @property ind1 {string} 1-char indicator 1.
  *  @property ind2 {string} 1-char indicator 2.
- *  @property data {string} If `this.tag` < 010, the control field data.
+ *  @property data {string} If `this.tag` &lt; 010, the control field data.
 */
 function MarcField(field, field_data){
 'use strict';
@@ -24,7 +52,7 @@ function MarcField(field, field_data){
         //returns a copy of subfields object.
         var clone = [];
         var source = (f) ? f : this;  // allow cloning non-MarcField objects.
-        for(var i=0; i<source.subfield_data.length; i++){
+        for(var i=0; i&lt;source.subfield_data.length; i++){
             clone.push( { code: source.subfield_data[i].code , value: source.subfield_data[i].value } );
         }
         return clone;
@@ -33,7 +61,7 @@ function MarcField(field, field_data){
     * @param filterspec {string}  a list of subfields to include in output.  e.g. 'abhjm'.
     * @param options {object} options object
     * @param options.reorder {boolean} Order output by `filterspec`.  If `false`, subfields that match are returned in the order they appear in the record.
-    * @returns {object[]} Subfield data as {code: {string}, value: {string}} .<br />
+    * @returns {object[]} Subfield data as {code: {string}, value: {string}} .&lt;br />
     *   * If NO filterspec is provided, returns references to internal data (modifying will mutate the MarcRecord object).
     *   * If filterspec is provided, this method returns copies of the subfield data.
     */
@@ -49,14 +77,14 @@ function MarcField(field, field_data){
         var needles = filterspec;
         var haystack = (options.reorder) ?
                 this.subfield_data.sort(function(a,b){
-                        if (filterspec.indexOf(a.code)==-1 || filterspec.indexOf(b.code) < filterspec.indexOf(a.code)) return 1;
+                        if (filterspec.indexOf(a.code)==-1 || filterspec.indexOf(b.code) &lt; filterspec.indexOf(a.code)) return 1;
                         return -1;
                     })
                 : this.subfield_data;
         var newsubfields = [];
 
-        for(var i=0; i< haystack.length; i++){
-            for (var j = 0; j < needles.length; j++) {
+        for(var i=0; i&lt; haystack.length; i++){
+            for (var j = 0; j &lt; needles.length; j++) {
                 if (haystack[i].code === needles[j]) {
                     newsubfields.push({ code: haystack[i].code, value: haystack[i].value });
                     break;
@@ -80,7 +108,7 @@ function MarcField(field, field_data){
             out += ' ' + this.data;
         } else {
             out += ' ' + (this.ind1 || ' ') + (this.ind2 || ' ');
-            for (var j = 0; j < this.subfield_data.length; j++) {
+            for (var j = 0; j &lt; this.subfield_data.length; j++) {
                 out += " $" + this.subfield_data[j].code;
                 out += this.subfield_data[j].value;
             }
@@ -107,7 +135,7 @@ function MarcField(field, field_data){
      * @param options.filterEach {function(subfield_value)} specify a filter function to pass each subfield through
      * @param options.filterLast {function(subfield_value)} apply filter function to last subfield.
      * @param options.delimiter {string} character(s) to insert between subfields.
-     * @param options.filter {string} only include these subfields ('abc' includes all $a, $b, & $c).
+     * @param options.filter {string} only include these subfields ('abc' includes all $a, $b, &amp; $c).
      * @param options.reorder {boolean} reorder by order in filter param.
      */
 
@@ -119,7 +147,7 @@ function MarcField(field, field_data){
 
         var data_rcn = (this.rcn) ? 'data-rcn="' + this.rcn + '" ' : '';
         // arguably we should put indicators in data- attrs as well, but we stash them in classes for styling.
-        var output = '<span '+ data_rcn + 'class="marcfield marc' +this.tag + ' ' +
+        var output = '&lt;span '+ data_rcn + 'class="marcfield marc' +this.tag + ' ' +
                      'marc' + this.tag.substring(0,1) +'XX marc-i1'+i1+ ' marc-i2'+ i2 +'">';
 
         var findWhere = function(list, attrName, attrValue){
@@ -137,7 +165,7 @@ function MarcField(field, field_data){
         if(this.subfield_data.length){
             var target_subfields = this.subfields(options.filter, { reorder: options.reorder });
             if(target_subfields.length){
-                for(var i = 0; i < target_subfields.length; i++){
+                for(var i = 0; i &lt; target_subfields.length; i++){
                     var subf = target_subfields[i].code;
                     var value = target_subfields[i].value;
                     var targettag = this.tag+subf;
@@ -156,23 +184,23 @@ function MarcField(field, field_data){
                         }
                     }
 
-                    if(options.filterLast && typeof options.filterLast === 'function' && i == target_subfields.length-1){
+                    if(options.filterLast &amp;&amp; typeof options.filterLast === 'function' &amp;&amp; i == target_subfields.length-1){
                         value = options.filterLast(value);
                     }
                     var classnames = "subfield marc" + this.tag + subf;
                     if (authvaldesc) {
-                        output += '<span class="' + classnames + ' ui-field-description">' + authvaldesc + '</span>';
+                        output += '&lt;span class="' + classnames + ' ui-field-description">' + authvaldesc + '&lt;/span>';
                     }
-                    output += '<span class="' + classnames + ((authvaldesc) ? " ui-field-label" : "") + '">' + value + "</span>";
+                    output += '&lt;span class="' + classnames + ((authvaldesc) ? " ui-field-label" : "") + '">' + value + "&lt;/span>";
 
-                    if( options.delimiter && i < target_subfields.length - 1) output += options.delimiter;
+                    if( options.delimiter &amp;&amp; i &lt; target_subfields.length - 1) output += options.delimiter;
                 }
             }
         } else {
-            output += "<span class='subfield nodata'></span>";
+            output += "&lt;span class='subfield nodata'>&lt;/span>";
         }
 
-        return output + '</span>';
+        return output + '&lt;/span>';
 
     };
     /** Ouput single subfield value as a string.
@@ -190,7 +218,7 @@ function MarcField(field, field_data){
     */
     this.subfield_at = function(i, ref){
         //return copy of subfield i, or actual ref.
-        if( i < this.subfield_data.length){
+        if( i &lt; this.subfield_data.length){
             return (ref) ? this.subfield_data[i] : { code: this.subfield_data[i].code, value: this.subfield_data[i].value};
         } else {
             return null;
@@ -205,7 +233,7 @@ function MarcField(field, field_data){
     this.add_subfield = function(index, data) {
 
         var newSubfield = (typeof data == 'object') ? {code: data.code, value: data.value} : {code: data, value: ''};
-        if(index < 0 || index > this.subfield_data.length) index = this.subfield_data.length;
+        if(index &lt; 0 || index > this.subfield_data.length) index = this.subfield_data.length;
         this.subfield_data.splice(index||0, 0, newSubfield);
         return newSubfield;
     };
@@ -256,22 +284,22 @@ function MarcField(field, field_data){
     * @returns {object} Reference to the subfield.
     */
     this.replace_subfield = function(index, data){
-        if(index < this.subfield_data.length){
+        if(index &lt; this.subfield_data.length){
             this.subfield_data[index] = {code: data.code, value: data.value};
         }
     };
 
     this.is_control_field = function(){
-        return (this.tag && this.tag < '010') ? true : false;
+        return (this.tag &amp;&amp; this.tag &lt; '010') ? true : false;
     };
     this.index = function(){
         // return field's index in the record.
-        for (var i = 0; i < this.record._fields.length; i++) {
+        for (var i = 0; i &lt; this.record._fields.length; i++) {
             if(this.record._fields[i]===this) return i;
         }
     };
     this.del = function(){
-        for (var i = 0; i < this.record._fields.length; i++) {
+        for (var i = 0; i &lt; this.record._fields.length; i++) {
             if(this.record._fields[i]===this){
                 this.record.delete_field(i);
                 return;
@@ -291,7 +319,7 @@ function MarcField(field, field_data){
                 ind2: this.ind2,
                 subfields: []
             };
-            for(var i=0; i<this.subfield_data.length; i++){
+            for(var i=0; i&lt;this.subfield_data.length; i++){
                 field_data.subfields.push(this.subfield_data[i].code);
                 field_data.subfields.push(this.subfield_data[i].value);
             }
@@ -314,14 +342,14 @@ function MarcField(field, field_data){
         if(links){
             if(tag) links = links.filter(
                 function(sf){
-                    return (sf.value.substr(0,3) == tag) && ( !on || onum(sf.value)==on );
+                    return (sf.value.substr(0,3) == tag) &amp;&amp; ( !on || onum(sf.value)==on );
                 });
             var self = this;
-            for (var i =  0; i < links.length ; i++) {
+            for (var i =  0; i &lt; links.length ; i++) {
                 this.record.fields( links[i].value.substr(0,3) )
                     .filter(function(f){
                         var backlinks = f.subfields('6');
-                        return backlinks.length && backlinks.filter(
+                        return backlinks.length &amp;&amp; backlinks.filter(
                             function(sf){
                                 return sf.value.split('/')[0] == self.tag + '-' + onum(links[i].value);
                             }).length ;
@@ -349,7 +377,7 @@ function MarcField(field, field_data){
             var linkstr = self.tag + '-' + on;
             link.fields.forEach(function(field){
                 for (var i = field.subfield_data.length - 1; i >= 0; i--) {
-                    if(field.subfield_data[i].code=='6' && field.subfield_data[i].value == linkstr){
+                    if(field.subfield_data[i].code=='6' &amp;&amp; field.subfield_data[i].value == linkstr){
                         field.subfield_data.splice(i,1);
                     }
                 }
@@ -381,8 +409,8 @@ function MarcField(field, field_data){
             }
         });
         var on = "01";
-        for (var i = 1; i < 100; i++) {
-            on = (i < 10) ? '0' + i : i.toString();
+        for (var i = 1; i &lt; 100; i++) {
+            on = (i &lt; 10) ? '0' + i : i.toString();
             if(!used[on]) break;
         }
         return on;
@@ -390,7 +418,7 @@ function MarcField(field, field_data){
 
     // Object initialization
 
-    // we store subfields as an array of objects with properties code & value
+    // we store subfields as an array of objects with properties code &amp; value
     // to simplify sorting.  The external format is an interleaved array of code, value pairs.
     // accepts either format.
 
@@ -402,7 +430,7 @@ function MarcField(field, field_data){
         this.ind1 = field_data.ind1 || ' ';
         this.ind2 = field_data.ind2 || ' ';
         if(field_data.subfields){
-            for (var i = 0; i < field_data.subfields.length-1; i+=2 ){
+            for (var i = 0; i &lt; field_data.subfields.length-1; i+=2 ){
                 this.subfield_data.push( { code: field_data.subfields[i], value: field_data.subfields[i+1] });
             }
         } else {
@@ -429,7 +457,7 @@ function MarcRecord(marc) {
     this._fields = [];
 
     // BIB types:
-    // positions 6 & 7 in LDR.
+    // positions 6 &amp; 7 in LDR.
     var rtype_re = {
         BKS : /[at]{1}[acdm]{1}/,      // LOC BK
         COM : /[m]{1}[abcdmsi]{1}/,    // LOC CF
@@ -448,7 +476,7 @@ function MarcRecord(marc) {
     this._fields = [ new MarcField('000', marc.leader) ];
     this._fields[0].record = this;
 
-    for (var i = 0; i < marc.fields.length-1; i+=2) {
+    for (var i = 0; i &lt; marc.fields.length-1; i+=2) {
         var field = new MarcField(marc.fields[i], marc.fields[i+1]);
         field.record = this;
         this._fields.push(field);
@@ -468,7 +496,7 @@ function MarcRecord(marc) {
     this.fields = function(tag) {
         var out = [];
         var tag_re = new RegExp(tag);
-        for (var i = 0; i < this._fields.length; i++) {
+        for (var i = 0; i &lt; this._fields.length; i++) {
             if(tag_re.test(this._fields[i].tag)){
                 out.push(this._fields[i]);
             }
@@ -502,15 +530,15 @@ function MarcRecord(marc) {
             newField = fieldOrTag;
         } else {
             var tag = fieldOrTag;
-            var field_data = (tag && tag < '010') ? '' : { subfields: ['a', '']};
+            var field_data = (tag &amp;&amp; tag &lt; '010') ? '' : { subfields: ['a', '']};
             newField = new MarcField(tag, field_data);
         }
         newField.record = this;
         if(!index){
             var last_tag = '';
-            for (var i = 0; i < this._fields.length; i++) {
+            for (var i = 0; i &lt; this._fields.length; i++) {
                 index=i;
-                if(last_tag <= newField.tag && this._fields[i].tag > newField.tag){
+                if(last_tag &lt;= newField.tag &amp;&amp; this._fields[i].tag > newField.tag){
                     break;
                 }
                 last_tag = this._fields[i].tag;
@@ -535,7 +563,7 @@ function MarcRecord(marc) {
 
     this.reorder_fields = function(){
         this._fields.sort(function(a,b){
-            return ( a.tag < b.tag ) ? -1 :
+            return ( a.tag &lt; b.tag ) ? -1 :
                         (a.tag > b.tag ) ? 1 : 0;
         });
     };
@@ -550,7 +578,7 @@ function MarcRecord(marc) {
         if(subf){
             var f = this.fields(tag);
             if(f){
-                for(var i=0; i<f.length; i++){
+                for(var i=0; i&lt;f.length; i++){
                     if(f[i].subfield(subf)) return true;
                 }
             }
@@ -584,7 +612,7 @@ function MarcRecord(marc) {
 
     this.toJSON = function(){
         var out = { leader: this.leader(), fields: []};
-        for (var i = 0; i < this._fields.length; i++) {
+        for (var i = 0; i &lt; this._fields.length; i++) {
             if(this._fields[i].tag == '000') continue;
             out.fields.push( this._fields[i].tag );
             if(this._fields[i].is_control_field()){
@@ -594,7 +622,7 @@ function MarcRecord(marc) {
                     ind2: this._fields[i].ind2,
                     subfields: []
                     };
-                for (var j = 0; j < this._fields[i].subfield_data.length; j++) {
+                for (var j = 0; j &lt; this._fields[i].subfield_data.length; j++) {
                     sf.subfields.push(this._fields[i].subfield_data[j].code);
                     sf.subfields.push(this._fields[i].subfield_data[j].value);
                 }
@@ -638,8 +666,8 @@ function MarcRecord(marc) {
     };
     /**
     * @param {string} ctrlspec A specifier indicating control field's tag, and optionally,
-    * a substring to select from the field data. <br/>Examples:
-    * <ul><li>ctrl('008')</li><li>ctrl('008[7]')  // position 7.</li><li>ctrl('008[7-8]') // positions 7&8</li></ul>
+    * a substring to select from the field data. &lt;br/>Examples:
+    * &lt;ul>&lt;li>ctrl('008')&lt;/li>&lt;li>ctrl('008[7]')  // position 7.&lt;/li>&lt;li>ctrl('008[7-8]') // positions 7&amp;8&lt;/li>&lt;/ul>
     * @param {string} setter value.
     * @returns {string} The control field's value or a substring derived from it.
     */
@@ -648,7 +676,7 @@ function MarcRecord(marc) {
         var pos = ctrlspec.substr(4).replace(/\[|\]/g, '').split(/-/);
         var len = (pos[1]) ? pos[1] - pos[0] + 1 : 1;
 
-        if(tag && tag < '010'){
+        if(tag &amp;&amp; tag &lt; '010'){
             if(!this.field(tag)) return null;
             if (pos[0] === '') {
                 return this.field(tag).data;
@@ -686,3 +714,26 @@ function MarcRecord(marc) {
     };
 
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="MarcField.html">MarcField</a></li><li><a href="MarcRecord.html">MarcRecord</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon May 10 2021 15:15:02 GMT-0700 (Pacific Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

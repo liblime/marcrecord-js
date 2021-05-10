@@ -1,6 +1,6 @@
 {
   "name": "marcrecord",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "src/marcrecord.js",
   "description": "js library for maniuplating and displaying MARC21 data",
   "homepage": "https://github.com/liblime/marcrecord-js",

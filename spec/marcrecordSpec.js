@@ -29,7 +29,7 @@ var marcjson = {
                     ]
             },
             '100', {
-                ind1: '', ind2: ' ',
+                ind1: ' ', ind2: ' ',
                 subfields: [
                 'a', 'The Man' ]
             },
@@ -141,12 +141,15 @@ describe('MARC-HTML output', function(){
     });
     it('Fetch field as marc-html, with repeated subfield.', function(){
         expect(r.field('016').html({filter: '9b'})).toEqual(
-            '<span class="marcfield marc016 marc0XX marc-i11 marc-i2"><span class="subfield marc016b">zzyzzy</span><span class="subfield marc016b">zzxyyx</span><span class="subfield marc0169">ZxzXz</span></span>'
+            '<span class="marcfield marc016 marc0XX marc-i11 marc-i2"><span class="subfield marc016b">zzyzzy</span>' +
+            '<span class="subfield marc016b">zzxyyx</span><span class="subfield marc0169">ZxzXz</span></span>'
             );
     });
     it('Fetch field as marc-html, reordered.', function(){
         expect(r.field('016').html({filter: 't9Xb', reorder: true})).toEqual(
-            '<span class="marcfield marc016 marc0XX marc-i11 marc-i2"><span class="subfield marc016t">xyzzy</span><span class="subfield marc0169">ZxzXz</span><span class="subfield marc016X">syzygy</span><span class="subfield marc016b">zzyzzy</span><span class="subfield marc016b">zzxyyx</span></span>'
+            '<span class="marcfield marc016 marc0XX marc-i11 marc-i2"><span class="subfield marc016t">xyzzy</span>' +
+            '<span class="subfield marc0169">ZxzXz</span><span class="subfield marc016X">syzygy</span>' +
+            '<span class="subfield marc016b">zzyzzy</span><span class="subfield marc016b">zzxyyx</span></span>'
             );
     });
 });
